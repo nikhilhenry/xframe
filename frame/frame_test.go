@@ -9,26 +9,26 @@ import (
 	"testing"
 )
 
-func TestGenerate(t *testing.T) {
-
-	getScreenTestImage := func(t testing.TB) image.Image {
-		reader, err := os.Open("testdata/screen-home.png")
-		defer func(reader *os.File) {
-			err := reader.Close()
-			if err != nil {
-				t.Error(err)
-			}
-		}(reader)
+func getScreenTestImage(t testing.TB) image.Image {
+	t.Helper()
+	reader, err := os.Open("testdata/screen-home.png")
+	defer func(reader *os.File) {
+		err := reader.Close()
 		if err != nil {
 			t.Error(err)
 		}
-		screenShotImage, _, err := image.Decode(reader)
-		if err != nil {
-			t.Error("unable to decode image file")
-		}
-		return screenShotImage
+	}(reader)
+	if err != nil {
+		t.Error(err)
 	}
+	screenShotImage, _, err := image.Decode(reader)
+	if err != nil {
+		t.Error("unable to decode image file")
+	}
+	return screenShotImage
+}
 
+func TestGenerate(t *testing.T) {
 	approvals.UseFolder("testdata")
 
 	t.Run("it generates an image with the device bezel", func(t *testing.T) {
