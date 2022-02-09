@@ -45,3 +45,16 @@ func TestGenerate(t *testing.T) {
 		approvals.VerifyWithExtension(t, reader, ".png")
 	})
 }
+
+func BenchmarkGenerate(b *testing.B) {
+
+	var screenshot = getScreenTestImage(b)
+
+	buf := bytes.Buffer{}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_ = frame.Generate(&buf, screenshot)
+	}
+}
