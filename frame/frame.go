@@ -12,7 +12,8 @@ import (
 //go:embed assets
 var assetsFs embed.FS
 
-func Generate(w io.Writer, screenImage image.Image) error {
+// GenerateFrameWithBezel Generates an image with the screenshot embedded within a device bezel
+func GenerateFrameWithBezel(w io.Writer, screenImage image.Image) error {
 	//get embedded device image
 	deviceImageFile, err := assetsFs.ReadFile("assets/iphone-13-pro.png")
 	deviceImage, _, err := image.Decode(bytes.NewReader(deviceImageFile))

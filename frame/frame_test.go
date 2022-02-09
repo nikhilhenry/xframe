@@ -9,6 +9,7 @@ import (
 	"testing"
 )
 
+// Returns a test image of the home screen from the iPhone-13 simulator
 func getScreenTestImage(t testing.TB) image.Image {
 	t.Helper()
 	reader, err := os.Open("testdata/screen-home.png")
@@ -35,7 +36,7 @@ func TestGenerate(t *testing.T) {
 		var screenshot = getScreenTestImage(t)
 
 		buf := bytes.Buffer{}
-		err := frame.Generate(&buf, screenshot)
+		err := frame.GenerateFrameWithBezel(&buf, screenshot)
 
 		if err != nil {
 			t.Fatal(err)
@@ -55,6 +56,6 @@ func BenchmarkGenerate(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_ = frame.Generate(&buf, screenshot)
+		_ = frame.GenerateFrameWithBezel(&buf, screenshot)
 	}
 }
