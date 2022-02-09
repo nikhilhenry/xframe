@@ -16,6 +16,7 @@ func TestGenerate(t *testing.T) {
 		defer func(reader *os.File) {
 			err := reader.Close()
 			if err != nil {
+				t.Error(err)
 			}
 		}(reader)
 		if err != nil {
