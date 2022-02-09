@@ -10,14 +10,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// generateCmd represents the generate command
+// generateCmd represents the frame command
 var generateCmd = &cobra.Command{
-	Use:   "generate",
+	Use:   "frame",
 	Short: "generates an output image with the screenshot over a device bezel",
-	Long: `generate an output image with the screenshot over a desired simulator screenshot
+	Long: `frame an output image with the screenshot over a desired simulator screenshot
 using official Apple device bezels.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("generate called")
+		fmt.Println("frame called")
 	},
 }
 
