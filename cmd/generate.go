@@ -4,7 +4,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"github.com/nikhilhenry/X-Frame/frame"
+	"github.com/nikhilhenry/x-frame/frame"
 	"github.com/spf13/cobra"
 	"image"
 	"os"

@@ -1,4 +1,4 @@
-module github.com/nikhilhenry/X-Frame
+module github.com/nikhilhenry/x-frame
 
 go 1.17
 
