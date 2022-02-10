@@ -11,7 +11,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "X-Frame",
+	Use:   "x-frame",
 	Short: "Generate screenshots with IOS device bezels",
 	Long:  `A CLI tool to draw device bezels on IOS screenshots from the Xcode simulator`,
 	// Uncomment the following line if your bare application
