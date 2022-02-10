@@ -18,6 +18,7 @@ var generateCmd = &cobra.Command{
 	Short: "generates an output image with the screenshot over a device bezel",
 	Long: `frame an output image with the screenshot over a desired simulator screenshot
 using official Apple device bezels.`,
+	Args: cobra.MinimumNArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		//read image
 		file, err := os.ReadFile(args[0])
