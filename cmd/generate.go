@@ -29,12 +29,8 @@ using official Apple device bezels.`,
 			return err
 		}
 		//create output image
-		outputPath := path.Clean(args[1])
-		filePath := strings.SplitAfter(args[0], "/")
-		fileNameWithExtension := filePath[len(filePath)-1]
-		fmt.Println(fileNameWithExtension)
-		fileName := strings.Split(fileNameWithExtension, ".")[0]
-		outputImage, fileErr := os.Create(fmt.Sprintf("%s/%s-framed.png", outputPath, fileName))
+		outputPath := getFilePath(args[0], args[1])
+		outputImage, fileErr := os.Create(outputPath)
 		if fileErr != nil {
 			return fileErr
 		}
@@ -51,6 +47,24 @@ using official Apple device bezels.`,
 		}
 		return nil
 	},
+}
+
+func getFilePath(imageFilePath string, rawPath string) (filePath string) {
+	if rawPath != "." {
+		if strings.HasSuffix(rawPath, ".png") {
+			filePath = rawPath
+			return
+		}
+		filePath = rawPath + ".png"
+		return
+	}
+	cleanedPath := path.Clean(rawPath)
+	filePathElements := strings.SplitAfter(imageFilePath, "/")
+	fmt.Println(filePathElements)
+	fileNameWithExtension := filePathElements[len(filePathElements)-1]
+	fileName := strings.Split(fileNameWithExtension, ".")[0]
+	filePath = fmt.Sprintf("%s/%s-framed.png", cleanedPath, fileName)
+	return
 }
 
 func init() {
