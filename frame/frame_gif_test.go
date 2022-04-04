@@ -28,6 +28,19 @@ func TestGenerateGif(t *testing.T) {
 	})
 }
 
+func BenchmarkGenerateGif(b *testing.B) {
+
+	var screenshot = getScreenTestGIF(b)
+
+	buf := bytes.Buffer{}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_ = frame.GenerateFrameWithBezelGIF(&buf, screenshot)
+	}
+}
+
 // Returns a test GIF of the home screen from the iPhone-13 simulator
 func getScreenTestGIF(t testing.TB) gif.GIF {
 	t.Helper()
