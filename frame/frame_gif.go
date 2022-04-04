@@ -2,11 +2,10 @@ package frame
 
 import (
 	"bytes"
-	"fmt"
+	"golang.org/x/image/draw"
 	"image"
 	"image/color"
 	pallete "image/color/palette"
-	"image/draw"
 	"image/gif"
 	"io"
 )
@@ -16,30 +15,28 @@ func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
 	//decode images
 	imageFrames := imageGif.Image
 
+	// temporary array with palette images [store the processed buffers]
 	framedImages := make([]*image.Paletted, 5)
-
+	// @todo encodes for all image buffer not just 5
 	for index, imageFrame := range imageFrames[0:5] {
 		imageBuf := bytes.Buffer{}
-		fmt.Println("going to generate image")
 
+		// @todo we need to scale the image here so that even a low quality gif looks good
 		err := GenerateFrameWithBezel(&imageBuf, imageFrame)
 		if err != nil {
 			return err
 		}
-		fmt.Println("image framed")
+
+		// convert to palette image for processing
 		framedImage, _, err := image.Decode(&imageBuf)
 		if err != nil {
 			return err
 		}
-		fmt.Println("image encoded")
 		framedImages[index] = imageToPaleted(framedImage, pallete.Plan9)
 	}
 
-	//create gif
-	fmt.Println(len(framedImages))
-	fmt.Println(len(imageGif.Delay[0:5]))
+	//encode the buffer as a  gif
 	processedGIF := gif.GIF{Image: framedImages, Delay: imageGif.Delay[0:5]}
-	//encode all the images
 	err := gif.EncodeAll(w, &processedGIF)
 	if err != nil {
 		return err
