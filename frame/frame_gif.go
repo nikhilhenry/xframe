@@ -21,8 +21,11 @@ func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
 	for index, imageFrame := range imageFrames[0:5] {
 		imageBuf := bytes.Buffer{}
 
-		// @todo we need to scale the image here so that even a low quality gif looks good
-		err := GenerateFrameWithBezel(&imageBuf, imageFrame)
+		const imageWidth = 1170
+		const imageHeight = 2532
+		scaledDstImage := image.NewRGBA(image.Rect(0, 0, imageWidth, imageHeight))
+		draw.NearestNeighbor.Scale(scaledDstImage, scaledDstImage.Bounds(), imageFrame, imageFrame.Bounds(), draw.Over, nil)
+		err := GenerateFrameWithBezel(&imageBuf, scaledDstImage)
 		if err != nil {
 			return err
 		}
