@@ -21,13 +21,14 @@ func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
 	imageFrames := imageGif.Image
 
 	// temporary array with palette images [store the processed buffers]
-	framedImages := make([]*image.Paletted, 5)
+	framedImages := make([]*image.Paletted, len(imageFrames))
+	// channel to support concurrency
 	resultsChannel := make(chan result)
 
 	const imageWidth = 1170
 	const imageHeight = 2532
 
-	for index, img := range imageFrames[0:5] {
+	for index, img := range imageFrames {
 		go func(i int, imageFrame *image.Paletted) error {
 
 			imageBuf := bytes.Buffer{}
@@ -43,19 +44,19 @@ func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
 			if err != nil {
 				return err
 			}
-			resultsChannel <- result{index: i, image: imageToPaleted(framedImage, pallete.Plan9)}
+			resultsChannel <- result{index: i, image: imageToPaletted(framedImage, pallete.Plan9)}
 
 			return nil
 		}(index, img)
 	}
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < len(imageFrames); i++ {
 		r := <-resultsChannel
 		framedImages[r.index] = r.image
 	}
 
 	//encode the buffer as a  gif
-	processedGIF := gif.GIF{Image: framedImages, Delay: imageGif.Delay[0:5]}
+	processedGIF := gif.GIF{Image: framedImages, Delay: imageGif.Delay}
 	err := gif.EncodeAll(w, &processedGIF)
 	if err != nil {
 		return err
@@ -64,9 +65,9 @@ func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
 	return nil
 }
 
-func imageToPaleted(img image.Image, pallete color.Palette) *image.Paletted {
+func imageToPaletted(img image.Image, palette color.Palette) *image.Paletted {
 	bounds := img.Bounds()
-	palettedImage := image.NewPaletted(bounds, pallete)
+	palettedImage := image.NewPaletted(bounds, palette)
 	draw.FloydSteinberg.Draw(palettedImage, bounds, img, image.Point{})
 	return palettedImage
 }
