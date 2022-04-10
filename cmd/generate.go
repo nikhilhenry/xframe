@@ -4,7 +4,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"github.com/nikhilhenry/x-frame/frame"
+	"github.com/nikhilhenry/xframe/frame"
 	"github.com/spf13/cobra"
 	"image"
 	"os"
@@ -20,6 +20,7 @@ var generateCmd = &cobra.Command{
 using official Apple device bezels.`,
 	Args: cobra.MinimumNArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		//@todo check if image is gif
 		//read image
 		file, err := os.ReadFile(args[0])
 		if err != nil {

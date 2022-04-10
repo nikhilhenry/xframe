@@ -3,7 +3,7 @@ package frame_test
 import (
 	"bytes"
 	approvals "github.com/approvals/go-approval-tests"
-	"github.com/nikhilhenry/x-frame/frame"
+	"github.com/nikhilhenry/xframe/frame"
 	"image"
 	"os"
 	"testing"
