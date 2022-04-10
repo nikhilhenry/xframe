@@ -1,7 +1,4 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
+// Package cmd /*
 package cmd
 
 import (
@@ -11,7 +8,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "x-frame",
+	Use:   "xframe",
 	Short: "Generate screenshots with IOS device bezels",
 	Long:  `A CLI tool to draw device bezels on IOS screenshots from the Xcode simulator`,
 	// Uncomment the following line if your bare application
@@ -33,7 +30,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.X-Frame.yaml)")
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.XFrame.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
