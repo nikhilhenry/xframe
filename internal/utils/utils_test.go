@@ -5,14 +5,11 @@ import "testing"
 func TestGetDimensionsFromFlag(t *testing.T) {
 	t.Run("it returns width and height from string", func(t *testing.T) {
 		const dimFlag = "1920x1080"
-		want := struct {
-			Width  int
-			Height int
-		}{1920, 1080}
-		got := GetDimensionsFromFlag(dimFlag)
+		want := Dimension{1920, 1080}
+		got, _ := GetDimensionsFromFlag(dimFlag)
 
 		if got != want {
-			t.Errorf("expected '%q' but got '%q'", want, got)
+			t.Errorf("expected '%v\\n' but got '%v\\n'", want, got)
 		}
 	})
 }

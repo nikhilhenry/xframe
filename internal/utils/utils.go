@@ -6,6 +6,7 @@ import (
 	"image/png"
 	"io"
 	"path"
+	"strconv"
 	"strings"
 )
 
@@ -16,6 +17,21 @@ func ImageEncoderPNG(w io.Writer) func(*image.RGBA) error {
 		}
 		return nil
 	}
+}
+
+type Dimension struct {
+	Width  int
+	Height int
+}
+
+func GetDimensionsFromFlag(flag string) (Dimension, error) {
+	values := strings.Split(flag, "x")
+	width, err := strconv.Atoi(values[0])
+	height, err := strconv.Atoi(values[1])
+	if err != nil {
+		return Dimension{}, err
+	}
+	return Dimension{width, height}, nil
 }
 
 func GetFilePath(imageFilePath string, rawPath string) (filePath string) {
