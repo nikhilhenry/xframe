@@ -50,6 +50,18 @@ func TestGenerate(t *testing.T) {
 		reader := bytes.NewReader(buf.Bytes())
 		approvals.VerifyWithExtension(t, reader, ".png")
 	})
+	t.Run("it generates an image scaled to the provided dimension", func(t *testing.T) {
+		dim := utils.Dimension{Width: 685, Height: 1356}
+		buf := bytes.Buffer{}
+		err := frame.Generate(utils.EncodeWithScale(dim, utils.ImageEncoderPNG(&buf)), deviceBezel, screenshot)
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		reader := bytes.NewReader(buf.Bytes())
+		approvals.VerifyWithExtension(t, reader, ".png")
+	})
 }
 
 func BenchmarkGenerate(b *testing.B) {
