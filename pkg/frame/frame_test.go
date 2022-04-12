@@ -3,7 +3,7 @@ package frame_test
 import (
 	"bytes"
 	approvals "github.com/approvals/go-approval-tests"
-	bezel "github.com/nikhilhenry/xframe/internal/bezel"
+	"github.com/nikhilhenry/xframe/internal/bezel"
 	"github.com/nikhilhenry/xframe/internal/utils"
 	"github.com/nikhilhenry/xframe/pkg/frame"
 	"image"

@@ -2,7 +2,7 @@ package frame
 
 import (
 	"bytes"
-	bezel "github.com/nikhilhenry/xframe/internal/bezel"
+	"github.com/nikhilhenry/xframe/internal/bezel"
 	"github.com/nikhilhenry/xframe/internal/utils"
 	"golang.org/x/image/draw"
 	"image"
