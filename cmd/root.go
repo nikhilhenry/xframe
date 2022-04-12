@@ -13,10 +13,11 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "xframe",
-	Short: "Generates screenshots with IOS device bezels overlay",
-	Long:  `A CLI tool to draw device bezels on IOS screenshots from the Xcode simulator`,
-	Args:  cobra.MinimumNArgs(2),
+	Version: "0.0.0",
+	Use:     "xframe [path to simulator screenshot] [output path]",
+	Short:   "Generates screenshots with IOS device bezels overlay",
+	Long:    `A CLI tool to draw device bezels on IOS screenshots from the Xcode simulator`,
+	Args:    cobra.MinimumNArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		//read image
 		file, err := os.ReadFile(args[0])
