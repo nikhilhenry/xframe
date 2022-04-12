@@ -16,7 +16,7 @@ const (
 //go:embed assets
 var assetsFs embed.FS
 
-// Bezel holds the image, bound and name of a iphone device bezel
+// Bezel holds the Image, Bounds and Name of a iphone device bezel
 type Bezel struct {
 	Image  *image.Image
 	Bounds image.Rectangle
