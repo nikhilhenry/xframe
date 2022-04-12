@@ -1,28 +1,20 @@
 package frame
 
 import (
-	"bytes"
-	"embed"
 	"image"
 	"image/draw"
-	"image/png"
-	"io"
 )
 
-//go:embed assets
-var assetsFs embed.FS
+type overlay interface {
+	Image() *image.Image
+	Bounds() image.Rectangle
+}
 
-// GenerateFrameWithBezel Generates an image with the screenshot embedded within a device bezel
-func GenerateFrameWithBezel(w io.Writer, screenImage image.Image) error {
-	//get embedded device image
-	deviceImageFile, err := assetsFs.ReadFile("assets/iphone-13-pro.png")
-	deviceImage, _, err := image.Decode(bytes.NewReader(deviceImageFile))
-	if err != nil {
-		return err
-	}
+// Generate Generates an image with the screenshot embedded within a device bezel
+func Generate(encode func(rgba *image.RGBA) error, overlay overlay, screenImage image.Image) error {
 
 	//get image bounds
-	deviceImageBounds := deviceImage.Bounds()
+	deviceImageBounds := overlay.Bounds()
 	screenImageBounds := screenImage.Bounds()
 
 	destinationPoint := getDestinationPoint(deviceImageBounds, screenImageBounds)
@@ -35,10 +27,9 @@ func GenerateFrameWithBezel(w io.Writer, screenImage image.Image) error {
 
 	//copy device bezel onto drawn image
 	overRect := image.Rectangle{Min: deviceImageBounds.Min, Max: deviceImageBounds.Max}
-	draw.Draw(drawableScreenImage, overRect, deviceImage, deviceImageBounds.Min, draw.Over)
+	draw.Draw(drawableScreenImage, overRect, *overlay.Image(), deviceImageBounds.Min, draw.Over)
 
-	err = png.Encode(w, drawableScreenImage)
-	if err != nil {
+	if err := encode(drawableScreenImage); err != nil {
 		return err
 	}
 	return nil

@@ -4,7 +4,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"github.com/nikhilhenry/xframe/frame"
+	"github.com/nikhilhenry/xframe/pkg/frame"
 	"github.com/spf13/cobra"
 	"image"
 	"os"
@@ -43,7 +43,7 @@ using official Apple device bezels.`,
 			}
 		}(outputImage)
 
-		err = frame.GenerateFrameWithBezel(outputImage, screenShotImage)
+		err = frame.Generate(outputImage, screenShotImage)
 		if err != nil {
 			return err
 		}
