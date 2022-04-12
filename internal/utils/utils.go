@@ -18,7 +18,7 @@ func ImageEncoderPNG(w io.Writer) func(*image.RGBA) error {
 	}
 }
 
-func getFilePath(imageFilePath string, rawPath string) (filePath string) {
+func GetFilePath(imageFilePath string, rawPath string) (filePath string) {
 	if rawPath != "." {
 		if strings.HasSuffix(rawPath, ".png") {
 			filePath = rawPath
