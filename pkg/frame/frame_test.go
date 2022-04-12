@@ -41,7 +41,7 @@ func TestGenerate(t *testing.T) {
 	t.Run("it generates an image with the device bezel", func(t *testing.T) {
 
 		buf := bytes.Buffer{}
-		err := frame.GenerateFrameWithBezel(&buf, utils.ImageEncoderPNG, *deviceBezel, screenshot)
+		err := frame.GenerateFrameWithBezel(utils.ImageEncoderPNG(&buf), *deviceBezel, screenshot)
 
 		if err != nil {
 			t.Fatal(err)
@@ -62,6 +62,6 @@ func BenchmarkGenerate(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_ = frame.GenerateFrameWithBezel(&buf, utils.ImageEncoderPNG, *deviceBezel, screenshot)
+		_ = frame.GenerateFrameWithBezel(utils.ImageEncoderPNG(&buf), *deviceBezel, screenshot)
 	}
 }

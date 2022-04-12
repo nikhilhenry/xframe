@@ -38,11 +38,11 @@ func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
 			imageBuf := bytes.Buffer{}
 			scaledDstImage := image.NewRGBA(image.Rect(0, 0, imageWidth, imageHeight))
 			draw.NearestNeighbor.Scale(scaledDstImage, scaledDstImage.Bounds(), imageFrame, imageFrame.Bounds(), draw.Over, nil)
-			err := GenerateFrameWithBezel(&imageBuf, utils.ImageEncoderPNG, *deviceBezel, scaledDstImage)
+			err := GenerateFrameWithBezel(utils.ImageEncoderPNG(&imageBuf), *deviceBezel, scaledDstImage)
 			if err != nil {
 				return err
 			}
-
+			//@todo palette image without png encoding for fast performance
 			// convert to palette image for processing
 			framedImage, _, err := image.Decode(&imageBuf)
 			if err != nil {
