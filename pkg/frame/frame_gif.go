@@ -3,6 +3,7 @@ package frame
 import (
 	"bytes"
 	bezel "github.com/nikhilhenry/xframe/internal/bezel"
+	"github.com/nikhilhenry/xframe/internal/utils"
 	"golang.org/x/image/draw"
 	"image"
 	"image/color"
@@ -37,7 +38,7 @@ func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
 			imageBuf := bytes.Buffer{}
 			scaledDstImage := image.NewRGBA(image.Rect(0, 0, imageWidth, imageHeight))
 			draw.NearestNeighbor.Scale(scaledDstImage, scaledDstImage.Bounds(), imageFrame, imageFrame.Bounds(), draw.Over, nil)
-			err := GenerateFrameWithBezel(&imageBuf, *deviceBezel, scaledDstImage)
+			err := GenerateFrameWithBezel(&imageBuf, utils.ImageEncoderPNG, *deviceBezel, scaledDstImage)
 			if err != nil {
 				return err
 			}

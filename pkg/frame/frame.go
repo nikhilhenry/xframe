@@ -4,12 +4,11 @@ import (
 	"github.com/nikhilhenry/xframe/internal/bezel"
 	"image"
 	"image/draw"
-	"image/png"
 	"io"
 )
 
 // GenerateFrameWithBezel Generates an image with the screenshot embedded within a device bezel
-func GenerateFrameWithBezel(w io.Writer, bezel bezel.Bezel, screenImage image.Image) error {
+func GenerateFrameWithBezel(w io.Writer, encode func(w io.Writer, rgba *image.RGBA) error, bezel bezel.Bezel, screenImage image.Image) error {
 
 	//get image bounds
 	deviceImageBounds := bezel.Bounds
@@ -27,7 +26,7 @@ func GenerateFrameWithBezel(w io.Writer, bezel bezel.Bezel, screenImage image.Im
 	overRect := image.Rectangle{Min: deviceImageBounds.Min, Max: deviceImageBounds.Max}
 	draw.Draw(drawableScreenImage, overRect, *bezel.Image, deviceImageBounds.Min, draw.Over)
 
-	if err := png.Encode(w, drawableScreenImage); err != nil {
+	if err := encode(w, drawableScreenImage); err != nil {
 		return err
 	}
 	return nil
