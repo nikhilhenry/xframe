@@ -17,7 +17,7 @@ type result struct {
 	image *image.Paletted
 }
 
-func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
+func GenerateGIF(w io.Writer, imageGif gif.GIF) error {
 
 	//decode images
 	imageFrames := imageGif.Image

@@ -17,7 +17,7 @@ func TestGenerateGif(t *testing.T) {
 		var screenshot = getScreenTestGIF(t)
 
 		buf := bytes.Buffer{}
-		err := frame.GenerateFrameWithBezelGIF(&buf, screenshot)
+		err := frame.GenerateGIF(&buf, screenshot)
 
 		if err != nil {
 			t.Fatal(err)
@@ -37,7 +37,7 @@ func BenchmarkGenerateGif(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_ = frame.GenerateFrameWithBezelGIF(&buf, screenshot)
+		_ = frame.GenerateGIF(&buf, screenshot)
 	}
 }
 
