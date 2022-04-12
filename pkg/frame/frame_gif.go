@@ -2,6 +2,7 @@ package frame
 
 import (
 	"bytes"
+	bezel "github.com/nikhilhenry/xframe/internal/bezel"
 	"golang.org/x/image/draw"
 	"image"
 	"image/color"
@@ -28,13 +29,15 @@ func GenerateFrameWithBezelGIF(w io.Writer, imageGif gif.GIF) error {
 	const imageWidth = 1170
 	const imageHeight = 2532
 
+	deviceBezel := bezel.New(bezel.Iphone13Pro)
+
 	for index, img := range imageFrames {
 		go func(i int, imageFrame *image.Paletted) error {
 
 			imageBuf := bytes.Buffer{}
 			scaledDstImage := image.NewRGBA(image.Rect(0, 0, imageWidth, imageHeight))
 			draw.NearestNeighbor.Scale(scaledDstImage, scaledDstImage.Bounds(), imageFrame, imageFrame.Bounds(), draw.Over, nil)
-			err := GenerateFrameWithBezel(&imageBuf, scaledDstImage)
+			err := GenerateFrameWithBezel(&imageBuf, *deviceBezel, scaledDstImage)
 			if err != nil {
 				return err
 			}

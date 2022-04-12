@@ -1,28 +1,18 @@
 package frame
 
 import (
-	"bytes"
-	"embed"
+	"github.com/nikhilhenry/xframe/internal/bezel"
 	"image"
 	"image/draw"
 	"image/png"
 	"io"
 )
 
-//go:embed /internal/bezel/assets
-var assetsFs embed.FS
-
 // GenerateFrameWithBezel Generates an image with the screenshot embedded within a device bezel
-func GenerateFrameWithBezel(w io.Writer, screenImage image.Image) error {
-	//get embedded device image
-	deviceImageFile, err := assetsFs.ReadFile("assets/iphone-13-pro.png")
-	deviceImage, _, err := image.Decode(bytes.NewReader(deviceImageFile))
-	if err != nil {
-		return err
-	}
+func GenerateFrameWithBezel(w io.Writer, bezel bezel.Bezel, screenImage image.Image) error {
 
 	//get image bounds
-	deviceImageBounds := deviceImage.Bounds()
+	deviceImageBounds := bezel.Bounds
 	screenImageBounds := screenImage.Bounds()
 
 	destinationPoint := getDestinationPoint(deviceImageBounds, screenImageBounds)
@@ -35,10 +25,9 @@ func GenerateFrameWithBezel(w io.Writer, screenImage image.Image) error {
 
 	//copy device bezel onto drawn image
 	overRect := image.Rectangle{Min: deviceImageBounds.Min, Max: deviceImageBounds.Max}
-	draw.Draw(drawableScreenImage, overRect, deviceImage, deviceImageBounds.Min, draw.Over)
+	draw.Draw(drawableScreenImage, overRect, *bezel.Image, deviceImageBounds.Min, draw.Over)
 
-	err = png.Encode(w, drawableScreenImage)
-	if err != nil {
+	if err := png.Encode(w, drawableScreenImage); err != nil {
 		return err
 	}
 	return nil

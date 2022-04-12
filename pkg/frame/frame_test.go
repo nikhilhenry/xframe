@@ -3,6 +3,7 @@ package frame_test
 import (
 	"bytes"
 	approvals "github.com/approvals/go-approval-tests"
+	bezel "github.com/nikhilhenry/xframe/internal/bezel"
 	"github.com/nikhilhenry/xframe/pkg/frame"
 	"image"
 	"os"
@@ -32,11 +33,14 @@ func getScreenTestImage(t testing.TB) image.Image {
 func TestGenerate(t *testing.T) {
 	approvals.UseFolder("testdata")
 
-	t.Run("it generates an image with the device bezel", func(t *testing.T) {
-		var screenshot = getScreenTestImage(t)
+	var screenshot = getScreenTestImage(t)
+
+	deviceBezel := bezel.New(bezel.Iphone13Pro)
+
+	t.Run("it generates an image with the device deviceBezel", func(t *testing.T) {
 
 		buf := bytes.Buffer{}
-		err := frame.GenerateFrameWithBezel(&buf, screenshot)
+		err := frame.GenerateFrameWithBezel(&buf, *deviceBezel, screenshot)
 
 		if err != nil {
 			t.Fatal(err)
@@ -49,13 +53,14 @@ func TestGenerate(t *testing.T) {
 
 func BenchmarkGenerate(b *testing.B) {
 
-	var screenshot = getScreenTestImage(b)
+	screenshot := getScreenTestImage(b)
+	deviceBezel := bezel.New(bezel.Iphone13Pro)
 
 	buf := bytes.Buffer{}
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_ = frame.GenerateFrameWithBezel(&buf, screenshot)
+		_ = frame.GenerateFrameWithBezel(&buf, *deviceBezel, screenshot)
 	}
 }
