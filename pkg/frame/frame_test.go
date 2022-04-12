@@ -36,12 +36,12 @@ func TestGenerate(t *testing.T) {
 
 	var screenshot = getScreenTestImage(t)
 
-	deviceBezel := bezel.New(bezel.Iphone13Pro)
+	deviceBezel := bezel.Bezel{Name: bezel.Iphone13Pro}
 
 	t.Run("it generates an image with the device bezel", func(t *testing.T) {
 
 		buf := bytes.Buffer{}
-		err := frame.GenerateFrameWithBezel(utils.ImageEncoderPNG(&buf), *deviceBezel, screenshot)
+		err := frame.GenerateFrameWithBezel(utils.ImageEncoderPNG(&buf), deviceBezel, screenshot)
 
 		if err != nil {
 			t.Fatal(err)
@@ -55,13 +55,13 @@ func TestGenerate(t *testing.T) {
 func BenchmarkGenerate(b *testing.B) {
 
 	screenshot := getScreenTestImage(b)
-	deviceBezel := bezel.New(bezel.Iphone13Pro)
+	deviceBezel := bezel.Bezel{Name: bezel.Iphone13Pro}
 
 	buf := bytes.Buffer{}
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_ = frame.GenerateFrameWithBezel(utils.ImageEncoderPNG(&buf), *deviceBezel, screenshot)
+		_ = frame.GenerateFrameWithBezel(utils.ImageEncoderPNG(&buf), deviceBezel, screenshot)
 	}
 }
