@@ -14,7 +14,8 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Version: "0.0.0",
-	Use:     "xframe [path to simulator screenshot] [output path]",
+	Use:     "xframe <path to simulator screenshot> <output path>",
+	Example: "xframe screenshot.png .",
 	Short:   "Generates screenshots with IOS device bezels overlay",
 	Long:    `A CLI tool to draw device bezels on IOS screenshots from the Xcode simulator`,
 	Args:    cobra.MinimumNArgs(2),
