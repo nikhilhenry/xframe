@@ -43,7 +43,7 @@ using official Apple device bezels.`,
 			}
 		}(outputImage)
 
-		err = frame.GenerateFrameWithBezel(outputImage, screenShotImage)
+		err = frame.Generate(outputImage, screenShotImage)
 		if err != nil {
 			return err
 		}
