@@ -1,16 +1,20 @@
 package frame
 
 import (
-	"github.com/nikhilhenry/xframe/internal/bezel"
 	"image"
 	"image/draw"
 )
 
+type overlay interface {
+	Image() *image.Image
+	Bounds() image.Rectangle
+}
+
 // GenerateFrameWithBezel Generates an image with the screenshot embedded within a device bezel
-func GenerateFrameWithBezel(encode func(rgba *image.RGBA) error, bezel bezel.Bezel, screenImage image.Image) error {
+func GenerateFrameWithBezel(encode func(rgba *image.RGBA) error, overlay overlay, screenImage image.Image) error {
 
 	//get image bounds
-	deviceImageBounds := bezel.Bounds
+	deviceImageBounds := overlay.Bounds()
 	screenImageBounds := screenImage.Bounds()
 
 	destinationPoint := getDestinationPoint(deviceImageBounds, screenImageBounds)
@@ -23,7 +27,7 @@ func GenerateFrameWithBezel(encode func(rgba *image.RGBA) error, bezel bezel.Bez
 
 	//copy device bezel onto drawn image
 	overRect := image.Rectangle{Min: deviceImageBounds.Min, Max: deviceImageBounds.Max}
-	draw.Draw(drawableScreenImage, overRect, *bezel.Image, deviceImageBounds.Min, draw.Over)
+	draw.Draw(drawableScreenImage, overRect, *overlay.Image(), deviceImageBounds.Min, draw.Over)
 
 	if err := encode(drawableScreenImage); err != nil {
 		return err

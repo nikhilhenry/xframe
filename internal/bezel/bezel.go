@@ -16,28 +16,34 @@ const (
 //go:embed assets
 var assetsFs embed.FS
 
-// Bezel holds the Image, Bounds and Name of a iphone device bezel
+// Bezel holds the Name of a iphone device bezel
+// Default is iphone-13-pro
 type Bezel struct {
-	Image  *image.Image
-	Bounds image.Rectangle
-	Name   string
+	Name string
 }
 
-// New returns a Bezel for a given device name.
-// Default device is Iphone 13 Pro
-func New(name string) *Bezel {
-	switch name {
+// Image returns a pointer to the image file of the bezel
+func (b Bezel) Image() *image.Image {
+	switch b.Name {
 	case Iphone13Pro:
 		err, img := load(Iphone13Pro)
 		if err != nil {
 			log.Fatalln("failed to load image")
 		}
-		// todo write better dereferencing
-		bounds := *img
-		return &Bezel{Image: img, Bounds: bounds.Bounds(), Name: name}
+		return img
 	default:
-		return &Bezel{}
+		err, img := load(Iphone13Pro)
+		if err != nil {
+			log.Fatalln("failed to load image")
+		}
+		return img
 	}
+}
+
+// Bounds returns the image bound of the bezel
+func (b Bezel) Bounds() image.Rectangle {
+	img := *b.Image()
+	return img.Bounds()
 }
 
 func load(name string) (error, *image.Image) {
