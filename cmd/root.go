@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/nikhilhenry/xframe/internal/bezel"
 	"github.com/nikhilhenry/xframe/internal/utils"
 	"github.com/nikhilhenry/xframe/pkg/frame"
@@ -20,6 +21,10 @@ var rootCmd = &cobra.Command{
 	Long:    `A CLI tool to draw device bezels on IOS screenshots from the Xcode simulator`,
 	Args:    cobra.MinimumNArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// get dimension flag
+		dimFlag, _ := cmd.Flags().GetString("dimension")
+		dim, _ := utils.GetDimensionsFromFlag(dimFlag)
+		fmt.Println(dim)
 		//read image
 		file, err := os.ReadFile(args[0])
 		if err != nil {
@@ -70,4 +75,5 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().StringP("dimension", "d", "0x0", "Dimension for output image. Example '1370x2712'")
 }
