@@ -9,7 +9,7 @@ import (
 	"io"
 )
 
-//go:embed assets
+//go:embed /internal/bezel/assets
 var assetsFs embed.FS
 
 // GenerateFrameWithBezel Generates an image with the screenshot embedded within a device bezel
