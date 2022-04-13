@@ -48,7 +48,7 @@ var rootCmd = &cobra.Command{
 		}(outputImage)
 
 		deviceBezel := bezel.Bezel{Name: bezel.Iphone13Pro}
-		err = frame.Generate(utils.EncodeWithScale(dim, utils.ImageEncoderPNG(outputImage)), deviceBezel, screenShotImage)
+		err = frame.Generate(utils.EncodeWithScale(dim, utils.EncodePNG(outputImage)), deviceBezel, screenShotImage)
 		if err != nil {
 			return err
 		}

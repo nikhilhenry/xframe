@@ -41,7 +41,7 @@ func TestGenerate(t *testing.T) {
 	t.Run("it generates an image with the device bezel", func(t *testing.T) {
 
 		buf := bytes.Buffer{}
-		err := frame.Generate(utils.ImageEncoderPNG(&buf), deviceBezel, screenshot)
+		err := frame.Generate(utils.EncodePNG(&buf), deviceBezel, screenshot)
 
 		if err != nil {
 			t.Fatal(err)
@@ -53,7 +53,7 @@ func TestGenerate(t *testing.T) {
 	t.Run("it generates an image scaled to the provided dimension", func(t *testing.T) {
 		dim := utils.Dimension{Width: 685, Height: 1356}
 		buf := bytes.Buffer{}
-		err := frame.Generate(utils.EncodeWithScale(dim, utils.ImageEncoderPNG(&buf)), deviceBezel, screenshot)
+		err := frame.Generate(utils.EncodeWithScale(dim, utils.EncodePNG(&buf)), deviceBezel, screenshot)
 
 		if err != nil {
 			t.Fatal(err)
@@ -66,7 +66,7 @@ func TestGenerate(t *testing.T) {
 	t.Run("it generates an image not scaled when no dimension is provided", func(t *testing.T) {
 		dim := utils.Dimension{Width: 0, Height: 0}
 		buf := bytes.Buffer{}
-		err := frame.Generate(utils.EncodeWithScale(dim, utils.ImageEncoderPNG(&buf)), deviceBezel, screenshot)
+		err := frame.Generate(utils.EncodeWithScale(dim, utils.EncodePNG(&buf)), deviceBezel, screenshot)
 
 		if err != nil {
 			t.Fatal(err)
@@ -87,6 +87,6 @@ func BenchmarkGenerate(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_ = frame.Generate(utils.ImageEncoderPNG(&buf), deviceBezel, screenshot)
+		_ = frame.Generate(utils.EncodePNG(&buf), deviceBezel, screenshot)
 	}
 }
