@@ -2,6 +2,9 @@ package utils
 
 import (
 	"fmt"
+	"image"
+	"image/color"
+	"image/draw"
 	"path"
 	"strconv"
 	"strings"
@@ -38,4 +41,10 @@ func GetFilePath(imageFilePath string, rawPath string) (filePath string) {
 	fileName := strings.Split(fileNameWithExtension, ".")[0]
 	filePath = fmt.Sprintf("%s/%s-framed.png", cleanedPath, fileName)
 	return
+}
+func ImageToPaletted(img image.Image, palette color.Palette) *image.Paletted {
+	bounds := img.Bounds()
+	palettedImage := image.NewPaletted(bounds, palette)
+	draw.FloydSteinberg.Draw(palettedImage, bounds, img, image.Point{})
+	return palettedImage
 }
