@@ -20,10 +20,10 @@ func GenerateSequence(encode func([]image.Image) error, overlay overlay, screenI
 	const imageHeight = 2532
 
 	for index, img := range screenImages {
-		go func(i int, imageFrame *image.Image) error {
+		go func(i int, imageFrame image.Image) error {
 
 			scaledDstImage := image.NewRGBA(image.Rect(0, 0, imageWidth, imageHeight))
-			draw.NearestNeighbor.Scale(scaledDstImage, scaledDstImage.Bounds(), *imageFrame, (*imageFrame).Bounds(), draw.Over, nil)
+			draw.NearestNeighbor.Scale(scaledDstImage, scaledDstImage.Bounds(), imageFrame, imageFrame.Bounds(), draw.Over, nil)
 			err := Generate(func(image image.Image) error {
 				resultsChannel <- result{index: i, image: image}
 				return nil
@@ -32,7 +32,7 @@ func GenerateSequence(encode func([]image.Image) error, overlay overlay, screenI
 				return err
 			}
 			return nil
-		}(index, &img)
+		}(index, img)
 	}
 
 	for i := 0; i < len(screenImages); i++ {
