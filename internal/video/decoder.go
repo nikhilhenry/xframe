@@ -2,6 +2,7 @@ package video
 
 import (
 	"bytes"
+	"fmt"
 	"image"
 	"os"
 	"os/exec"
@@ -17,10 +18,18 @@ import (
 
 func Decode(filePath string) (error, []image.Image) {
 
+	// create a temporary directory to store images
+	dirName, err := os.MkdirTemp("", "xframe-frame-store")
+	defer os.RemoveAll(dirName)
+	if err != nil {
+		return err, nil
+	}
+	fmt.Println(dirName)
+	outputPath := fmt.Sprintf("%v/img-out-temp%%d.png", dirName)
 	cmd := exec.Command("ffmpeg", "-y", // yes to all
 		"-i", path.Clean(filePath), // take stdin as input
 		"-vf", "fps=64", // set fps
-		"./output/img-out%d.png", // output to stdin
+		outputPath, // output to stdin
 	)
 	resultBuffer := bytes.NewBuffer(make([]byte, 50*1024*1024)) // pre allocate 5MiB buffer
 
