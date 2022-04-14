@@ -3,22 +3,26 @@ package video
 import (
 	"bytes"
 	"image"
-	"io"
 	"os"
 	"os/exec"
+	"path"
 )
 
-func Decode(reader io.Reader) (error, []image.Image) {
+//"-f", "mp4",
+//"-i", "pipe:0", // take stdin as input
+//"-vf", "fps=64", // set fps
+//"-c:v", "png", // output to png
+//"-f", "image2pipe", // specify output
+//"pipe:1", // output to stdin
 
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(reader)
+func Decode(filePath string) (error, []image.Image) {
 
-	cmd := exec.Command("ffmpeg", "y", // yes to all
-		"-i", "pipe:0", // take stdin as input
+	cmd := exec.Command("ffmpeg", "-y", // yes to all
+		"-i", path.Clean(filePath), // take stdin as input
 		"-vf", "fps=64", // set fps
-		"pipe:1", // output to stdin
+		"./output/img-out%d.png", // output to stdin
 	)
-	resultBuffer := bytes.NewBuffer(make([]byte, 5*1024*1024)) // pre allocate 5MiB buffer
+	resultBuffer := bytes.NewBuffer(make([]byte, 50*1024*1024)) // pre allocate 5MiB buffer
 
 	cmd.Stderr = os.Stderr    // bind log stream to stderr
 	cmd.Stdout = resultBuffer // stdout result will be written here
@@ -33,9 +37,9 @@ func Decode(reader io.Reader) (error, []image.Image) {
 		return err, nil
 	}
 	// pump video data to Stdin pipe
-	if _, err := stdin.Write(buf.Bytes()); err != nil {
-		return err, nil
-	}
+	//if _, err := stdin.Write(buf); err != nil {
+	//	return err, nil
+	//}
 	// close stdin
 	if err := stdin.Close(); err != nil {
 		return err, nil

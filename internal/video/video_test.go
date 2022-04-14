@@ -1,20 +1,20 @@
 package video
 
 import (
-	"io"
+	"bytes"
 	"os"
 	"testing"
 )
 
 func TestDecode(t *testing.T) {
-	screenVideo := getTestVideo(t)
-	err, _ := Decode(screenVideo)
+	//screenVideo := getTestVideo(t)
+	err, _ := Decode("../../pkg/frame/testdata/screen-video.mp4")
 	if err != nil {
 		t.Error(t)
 	}
 }
 
-func getTestVideo(t testing.TB) io.Reader {
+func getTestVideo(t testing.TB) []byte {
 	t.Helper()
 	reader, err := os.Open("../../pkg/frame/testdata/screen-video.mp4")
 	defer func(reader *os.File) {
@@ -26,6 +26,8 @@ func getTestVideo(t testing.TB) io.Reader {
 	if err != nil {
 		t.Error(err)
 	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(reader)
 
-	return reader
+	return buf.Bytes()
 }
