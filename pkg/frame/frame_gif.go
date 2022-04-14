@@ -6,16 +6,11 @@ import (
 	"github.com/nikhilhenry/xframe/internal/utils"
 	"golang.org/x/image/draw"
 	"image"
-	"image/color"
-	pallete "image/color/palette"
 	"image/gif"
 	"io"
 )
 
-type result struct {
-	index int
-	image *image.Paletted
-}
+// deprecated use frame_sequence instead
 
 func GenerateGIF(w io.Writer, imageGif gif.GIF) error {
 
@@ -25,7 +20,7 @@ func GenerateGIF(w io.Writer, imageGif gif.GIF) error {
 	// temporary array with palette images [store the processed buffers]
 	framedImages := make([]*image.Paletted, len(imageFrames))
 	// channel to support concurrency
-	resultsChannel := make(chan result)
+	//resultsChannel := make(chan result)
 
 	const imageWidth = 1170
 	const imageHeight = 2532
@@ -44,20 +39,20 @@ func GenerateGIF(w io.Writer, imageGif gif.GIF) error {
 			}
 			//@todo palette image without png encoding for fast performance
 			// convert to palette image for processing
-			framedImage, _, err := image.Decode(&imageBuf)
+			_, _, err = image.Decode(&imageBuf)
 			if err != nil {
 				return err
 			}
-			resultsChannel <- result{index: i, image: imageToPaletted(framedImage, pallete.Plan9)}
+			//resultsChannel <- result{index: i, image: imageToPaletted(framedImage, pallete.Plan9)}
 
 			return nil
 		}(index, img)
 	}
 
-	for i := 0; i < len(imageFrames); i++ {
-		r := <-resultsChannel
-		framedImages[r.index] = r.image
-	}
+	//for i := 0; i < len(imageFrames); i++ {
+	//	r := <-resultsChannel
+	//	framedImages[r.index] = r.image
+	//}
 
 	//encode the buffer as a  gif
 	processedGIF := gif.GIF{Image: framedImages, Delay: imageGif.Delay}
@@ -67,11 +62,4 @@ func GenerateGIF(w io.Writer, imageGif gif.GIF) error {
 	}
 
 	return nil
-}
-
-func imageToPaletted(img image.Image, palette color.Palette) *image.Paletted {
-	bounds := img.Bounds()
-	palettedImage := image.NewPaletted(bounds, palette)
-	draw.FloydSteinberg.Draw(palettedImage, bounds, img, image.Point{})
-	return palettedImage
 }
