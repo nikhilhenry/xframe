@@ -17,12 +17,24 @@ func EncodePNG(w io.Writer) func(*image.RGBA) error {
 	}
 }
 
-func EncodeGIF(w io.Writer, delay []int) func([]*image.Image) error {
-	return func(imgs []*image.Image) error {
+type result struct {
+	index int
+	image *image.Paletted
+}
+
+func EncodeGIF(w io.Writer, delay []int) func([]image.Image) error {
+	return func(imgs []image.Image) error {
 		palettedImgs := make([]*image.Paletted, len(imgs))
-		// convert image.Image to image.Palette
+		resultsChannel := make(chan result)
+		// convert image.Image to image.Paletted concurrently
 		for i, img := range imgs {
-			palettedImgs[i] = ImageToPaletted(*img, palette.Plan9)
+			go func(i int, img image.Image) {
+				resultsChannel <- result{index: i, image: ImageToPaletted(img, palette.Plan9)}
+			}(i, img)
+		}
+		for i := 0; i < len(imgs); i++ {
+			r := <-resultsChannel
+			palettedImgs[r.index] = r.image
 		}
 		processedGIF := gif.GIF{Image: palettedImgs, Delay: delay}
 		if err := gif.EncodeAll(w, &processedGIF); err != nil {
