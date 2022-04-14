@@ -11,7 +11,7 @@ type overlay interface {
 }
 
 // Generate Generates an image with the screenshot embedded within a device bezel
-func Generate(encode func(rgba *image.RGBA) error, overlay overlay, screenImage image.Image) error {
+func Generate(encode func(image.Image) error, overlay overlay, screenImage image.Image) error {
 
 	//get image bounds
 	deviceImageBounds := overlay.Bounds()

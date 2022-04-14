@@ -5,10 +5,10 @@ import (
 	"image"
 )
 
-func EncodeWithScale(dim Dimension, encode func(rgba *image.RGBA) error) func(img *image.RGBA) error {
+func EncodeWithScale(dim Dimension, encode func(image.Image) error) func(img image.Image) error {
 	// Do not scale if either Dimension value is 0
 	if dim.Width == 0 || dim.Height == 0 {
-		return func(img *image.RGBA) error {
+		return func(img image.Image) error {
 			if err := encode(img); err != nil {
 				return err
 			}
@@ -16,7 +16,7 @@ func EncodeWithScale(dim Dimension, encode func(rgba *image.RGBA) error) func(im
 		}
 	}
 	scaledDstImage := image.NewRGBA(image.Rect(0, 0, dim.Width, dim.Height))
-	return func(img *image.RGBA) error {
+	return func(img image.Image) error {
 		draw.ApproxBiLinear.Scale(scaledDstImage, scaledDstImage.Bounds(), img, img.Bounds(), draw.Over, nil)
 		err := encode(scaledDstImage)
 		if err != nil {

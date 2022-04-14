@@ -10,7 +10,7 @@ type result struct {
 	image image.Image
 }
 
-func GenerateSequence(encode func([]image.Image) error, overlay overlay, screenImages []*image.Image) error {
+func GenerateSequence(encode func([]image.Image) error, overlay overlay, screenImages []image.Image) error {
 	// temporary array with palette images [store the processed buffers]
 	framedImages := make([]image.Image, len(screenImages))
 	// channel to support concurrency
@@ -24,15 +24,15 @@ func GenerateSequence(encode func([]image.Image) error, overlay overlay, screenI
 
 			scaledDstImage := image.NewRGBA(image.Rect(0, 0, imageWidth, imageHeight))
 			draw.NearestNeighbor.Scale(scaledDstImage, scaledDstImage.Bounds(), *imageFrame, (*imageFrame).Bounds(), draw.Over, nil)
-			err := Generate(func(rgba *image.RGBA) error {
-				resultsChannel <- result{index: i, image: rgba}
+			err := Generate(func(image image.Image) error {
+				resultsChannel <- result{index: i, image: image}
 				return nil
 			}, overlay, scaledDstImage)
 			if err != nil {
 				return err
 			}
 			return nil
-		}(index, img)
+		}(index, &img)
 	}
 
 	for i := 0; i < len(screenImages); i++ {
