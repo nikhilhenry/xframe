@@ -60,3 +60,13 @@ func Encode(videoPath string, imgs []image.Image) error {
 
 	return nil
 }
+
+func EncodeImgs(outputPath string) func([]image.Image) error {
+	return func(imgs []image.Image) error {
+		err := Encode(outputPath, imgs)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+}
