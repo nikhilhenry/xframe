@@ -48,3 +48,9 @@ func ImageToPaletted(img image.Image, palette color.Palette) *image.Paletted {
 	draw.FloydSteinberg.Draw(palettedImage, bounds, img, image.Point{})
 	return palettedImage
 }
+func PalettedToImage(img *image.Paletted) image.Image {
+	bounds := img.Bounds()
+	palettedImage := image.NewRGBA64(bounds)
+	draw.FloydSteinberg.Draw(palettedImage, bounds, img, image.Point{})
+	return palettedImage
+}
