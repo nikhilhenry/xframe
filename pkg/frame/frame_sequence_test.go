@@ -12,9 +12,9 @@ import (
 
 func TestGenerateSequence(t *testing.T) {
 	approvals.UseFolder("testdata")
-	var screenshot = getScreenTestGIF(t)
 	deviceBezel := bezel.Bezel{Name: bezel.Iphone13Pro}
 	t.Run("it generates a gif with the device bezel", func(t *testing.T) {
+		var screenshot = getScreenTestGIF(t)
 		imgs := utils.DecodeGIF(screenshot)
 
 		buf := bytes.Buffer{}
