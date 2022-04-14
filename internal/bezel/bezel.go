@@ -18,6 +18,7 @@ var assetsFs embed.FS
 
 // Bezel holds the Name of a iphone device bezel
 // Default is iphone-13-pro
+// @todo improve performance by storing pointer to the file and bounds instead of computing on each call
 type Bezel struct {
 	Name string
 }
