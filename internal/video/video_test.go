@@ -23,6 +23,19 @@ func TestEncode(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestDecodeEncode(t *testing.T) {
+
+	err, imgs := Decode("../../pkg/frame/testdata/screen-video.mp4")
+	if err != nil {
+		t.Error(t)
+	}
+	err = Encode("./output/video-framed.mp4", imgs)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func getScreenTestGIF(t testing.TB) gif.GIF {
 	t.Helper()
 	reader, err := os.Open("../../pkg/frame/testdata/screen-home.gif")

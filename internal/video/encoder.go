@@ -35,7 +35,8 @@ func Encode(videoPath string, imgs []image.Image) error {
 			if err := imageEncoder(rgba); err != nil {
 				fmt.Println(err)
 			}
-		}(i, img)
+		}(i+1, img)
+		// increment index by 1 since ffmpeg reads from 1 img
 	}
 	wg.Wait()
 	// now pass these images to ffmpeg and encode

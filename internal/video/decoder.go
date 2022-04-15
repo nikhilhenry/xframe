@@ -8,6 +8,8 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"regexp"
+	"strconv"
 )
 
 type result struct {
@@ -49,10 +51,11 @@ func Decode(videoPath string) (error, []image.Image) {
 	if err != nil {
 		return err, nil
 	}
-	for i, file := range files {
-		go func(index int, fileName string) error {
+	for _, file := range files {
+		go func(fileName string) error {
+			fileDirPath := filepath.Join(dirName, fileName)
 			//	read the file
-			reader, err := os.Open(fileName)
+			reader, err := os.Open(fileDirPath)
 			defer reader.Close()
 			if err != nil {
 				fmt.Println(err)
@@ -63,12 +66,16 @@ func Decode(videoPath string) (error, []image.Image) {
 				fmt.Println(err)
 				return err
 			}
+			// find image index from file name
+			re := regexp.MustCompile("[0-9]+")
+			number := re.FindAllString(fileName, 1)
+			index, _ := strconv.Atoi(number[0])
 			resultsChannel <- result{
-				index: index,
+				index: index - 1,
 				image: img,
 			}
 			return nil
-		}(i, filepath.Join(dirName, file.Name()))
+		}(file.Name())
 	}
 	imgs := make([]image.Image, len(files))
 	for i := 0; i < len(files); i++ {
